@@ -41,39 +41,37 @@ export default class Search extends Component {
     filter() {
         let filters = [];
         let finalData = [];
-        let bass =[];
-        let player =[];
-        let guitar =[];
-        let chords =[];
+        let bass;
+        let player;
+        let guitar;
+        let chords;
 
         if (this.state.bass === true){
-           bass.push(this.state.data.filter(item => item.tabTypes.includes("TEXT_BASS_TAB")))
+        bass = [...new Set([...filters, (this.state.data.filter(item => item.tabTypes.includes("TEXT_BASS_TAB")))])]
         } else if (this.state.bass !== true && filters !== this.state.data) {
-            bass.push()
+            bass = filters
         }
         if (this.state.player === true) {
-            player.push(this.state.data.filter(item => item.tabTypes.includes("PLAYER")))
+            player = [...new Set([...filters,(this.state.data.filter(item => item.tabTypes.includes("PLAYER")))])]
         } else if (this.state.player !== true && filters !== this.state.data){
-            player.push() 
+            player = filters 
         }
         if (this.state.guitar === true){
-            guitar.push(this.state.data.filter(item => item.tabTypes.includes("TEXT_GUITAR_TAB")))
+            guitar= [...new Set([...filters,(this.state.data.filter(item => item.tabTypes.includes("TEXT_GUITAR_TAB")))])]
         } else if(this.state.guitar !== true && filters !== this.state.data)  {
-            guitar.push()
+            guitar = filters
         }
         if (this.state.chords === true){
-            chords.push(this.state.data.filter(item => item.tabTypes.includes("CHORDS")))
+            chords= [...new Set([...filters,(this.state.data.filter(item => item.tabTypes.includes("CHORDS")))])]
         } else if (this.state.chords !== true && filters !== this.state.data){
-            chords.push()
+            chords = filters
         }
 
         let bassReady = [].concat.apply([], bass)
         let playerReady = [].concat.apply([], player)
         let guitarReady = [].concat.apply([], guitar)
         let chordsReady = [].concat.apply([], chords)
-        console.log(bassReady)
         finalData= [...new Set([...bassReady, ...playerReady, ...guitarReady, ...chordsReady])]
-        console.log(finalData)
 
         if(this.state.chords !== true && this.state.guitar !== true && 
             this.state.player !== true && this.state.bass !== true) {
