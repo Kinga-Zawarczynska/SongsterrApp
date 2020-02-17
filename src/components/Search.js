@@ -33,29 +33,56 @@ export default class Search extends Component {
             bass: false,
             player: false,
             guitar: false,
-            chords: false,
-            filters: []
+            chords: false
 
         }
     }
 
-    componentDidMount() {
-        let filters = []
+    filter() {
+        let filters = [];
+        let finalData = [];
+        let bass =[];
+        let player =[];
+        let guitar =[];
+        let chords =[];
+
         if (this.state.bass === true){
-           filters.push(this.state.data.filter(item => item.tabTypes.includes("TEXT_BASS_TAB")))
+           bass.push(this.state.data.filter(item => item.tabTypes.includes("TEXT_BASS_TAB")))
+        } else if (this.state.bass !== true && filters !== this.state.data) {
+            bass.push()
         }
         if (this.state.player === true) {
-            filters.push(this.state.data.filter(item => item.tabTypes.includes("PLAYER")))
+            player.push(this.state.data.filter(item => item.tabTypes.includes("PLAYER")))
+        } else if (this.state.player !== true && filters !== this.state.data){
+            player.push() 
         }
         if (this.state.guitar === true){
-            filters.push(this.state.data.filter(item => item.tabTypes.includes("TEXT_GUITAR_TAB")))
+            guitar.push(this.state.data.filter(item => item.tabTypes.includes("TEXT_GUITAR_TAB")))
+        } else if(this.state.guitar !== true && filters !== this.state.data)  {
+            guitar.push()
         }
         if (this.state.chords === true){
-            filters.push(this.state.data.filter(item => item.tabTypes.includes("CHORDS")))
+            chords.push(this.state.data.filter(item => item.tabTypes.includes("CHORDS")))
+        } else if (this.state.chords !== true && filters !== this.state.data){
+            chords.push()
         }
-       
-        this.setState({filters: filters})
 
+        let bassReady = [].concat.apply([], bass)
+        let playerReady = [].concat.apply([], player)
+        let guitarReady = [].concat.apply([], guitar)
+        let chordsReady = [].concat.apply([], chords)
+        console.log(bassReady)
+        finalData= [...new Set([...bassReady, ...playerReady, ...guitarReady, ...chordsReady])]
+        console.log(finalData)
+
+        if(this.state.chords !== true && this.state.guitar !== true && 
+            this.state.player !== true && this.state.bass !== true) {
+                this.setState({filteredData: this.state.data})
+            } else {
+                this.setState({filteredData: finalData})
+            }
+       
+        
     }
 
     setSearchTerm = searchTerm => {
@@ -69,6 +96,12 @@ export default class Search extends Component {
             event.preventDefault()
         }
     }
+
+    handleCheckBox(e) {
+        this.setState({
+         bass: e.target.checked
+        })
+      }
 
     getData = debounce(() => {
         if (this.state.searchTerm !== '') {
@@ -112,65 +145,61 @@ export default class Search extends Component {
                         <input
                             type="checkbox"
                             value="bass"
-                            onChange={(e) => {
-                                if (e.target.checked) {
-                                   let bassFilter = this.state.data.filter(item => this.state.filters.map(filter => {
-                                            item.tabTypes.includes(filter)})
-                                        ) 
-                                         this.setState({
-                                            bass: true,
-                                            filteredData: bassFilter
-                                        
-                                    }
-                                    )
-                                } else {
-                                    this.setState({ filteredData: this.state.data })
-                                }
-
-                                console.log(this.state.filterdData)
-                            }} />
+                            onChange={(e) => this.setState({
+                                bass: e.target.checked
+                              })}
+                            />
                         <span>Bass</span>
                     </label>
                     <label>
                         <input
                             type="checkbox"
                             value="player"
-                            onChange={(e) => {
-                                if (e.target.checked) {
-                                    let playerFilter = this.state.data.filter(item => this.state.filters.map(filter => {
-                                             item.tabTypes.includes(filter)})
-                                         ) 
-                                          this.setState({
-                                             player: true,
-                                             filteredData: playerFilter
-                                         
-                                     }
-                                     )
-                                 }else {
-                                    this.setState({ filteredData: this.state.data })
-                                }
-
-                                console.log(this.state.filterdData)
-                            }} />
+                            onChange={(e) => this.setState({
+                                player: e.target.checked
+                              })} />
                         <span>Player</span>
+                    </label>
+                    <label>
+                        <input
+                            type="checkbox"
+                            value="guitar"
+                            onChange={(e) => this.setState({
+                                guitar: e.target.checked
+                              })} />
+                        <span>Guitar</span>
+                    </label>
+                    <label>
+                        <input
+                            type="checkbox"
+                            value="chords"
+                            onChange={(e) => this.setState({
+                                chords: e.target.checked
+                              })} />
+                        <span>Chords</span>
                     </label>
 
                 </div>
+                <div>
+                    <button onClick={() => {
+                        this.filter()
+                    }}>Filter</button>
+                </div>
 
                 <div>
-                    {this.state.filteredData.map(item => {
-                        return (
+                    { this.state.filteredData !== [] ?  this.state.filteredData.map(item => {
+                         return (
                             <div className={this.state.filter} key={item.id}>
                                 <div>
                                     {item.id}
                                 </div>
                                 <div>{item.title}</div>
                                 <div>{item.artist.name}</div>
-                                <div>{item.tabTypes.map(item => item + "")}</div>
+                                <div>{item.tabTypes.map(item => `${item} `)}</div>
                             </div>
-                        )
-
-                    })}
+                        )}
+                        ) : null
+                    } 
                 </div>
 
             </div>
