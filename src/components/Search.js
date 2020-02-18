@@ -150,7 +150,6 @@ this.setState({indexOfFirtsPage: this.state.indexOfLastPage - this.state.postsPe
                     const indexOfFirtsPage = indexOfLastPage - this.state.postsPerPage;
                     const currentCards = this.state.filteredData.slice(indexOfFirtsPage, indexOfLastPage);
                     this.setState({ currentCards: currentCards })
-                    console.log(this.state.currentCards)
                 }
 
                 )
