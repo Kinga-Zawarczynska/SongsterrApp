@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Card from './Card';
+import { Pagination } from './Pagination'
 
 const regex = /[ !"#$%&'()*+,./:;<=>?@[\]^_`{|}~]/
 const specialCharacters = [33, 64, 35, 37, 94, 38, 42, 40, 41, 95, 124, 123, 125, 91, 93, 39, 59, 34, 58, 36, 47, 68, 46, 44, 62, 60, 126, 96, 8364, 178, 178, 8800]
@@ -26,7 +27,7 @@ export default class Search extends Component {
 
     constructor(props) {
         super(props)
-        this.toggleClass= this.toggleClass.bind(this);
+        this.toggleClass = this.toggleClass.bind(this);
         this.state = {
             searchTerm: props.searchTerm,
             data: [],
@@ -36,10 +37,22 @@ export default class Search extends Component {
             player: false,
             guitar: false,
             chords: false,
-            active: false
+            active: false,
+            postsPerPage: 7,
+            currentPage: 1,
+            currentCards: [],
+            indexOfLastPage: 1,
+            indexOfFirtsPage: 1
+
 
         }
     }
+   
+    componentDidMount(){
+        this.setState({indexOfLastPage: this.state.currentPage * this.state.postsPerPage});
+this.setState({indexOfFirtsPage: this.state.indexOfLastPage - this.state.postsPerPage})  
+    }
+
 
     toggleClass() {
         const currentState = this.state.active;
@@ -84,14 +97,15 @@ export default class Search extends Component {
         if (this.state.chords !== true && this.state.guitar !== true &&
             this.state.player !== true && this.state.bass !== true) {
             this.setState({ filteredData: this.state.data })
-        } else if (finalData !== []){
+        } else if (finalData !== []) {
             this.setState({ filteredData: finalData })
         } else {
-           alert("We couldn't find that")
+            alert("We couldn't find that")
         }
 
 
     }
+
 
     setSearchTerm = searchTerm => {
         this.setState({ searchTerm })
@@ -111,6 +125,11 @@ export default class Search extends Component {
         })
     }
 
+    paginate = (pageNumber) => {
+        this.setState({ currentPage: pageNumber });
+    }
+
+
     getData = debounce(() => {
         if (this.state.searchTerm !== '') {
             fetch(`https://www.songsterr.com/a/ra/songs.json?pattern=${this.state.searchTerm}`, {
@@ -124,9 +143,17 @@ export default class Search extends Component {
                 .then(data => {
                     this.setState({
                         data: data,
-                        filteredData: data
+                        filteredData: data,
+                        currentCards: data
                     })
-                })
+                    const indexOfLastPage = this.state.currentPage * this.state.postsPerPage;
+                    const indexOfFirtsPage = indexOfLastPage - this.state.postsPerPage;
+                    const currentCards = this.state.filteredData.slice(indexOfFirtsPage, indexOfLastPage);
+                    this.setState({ currentCards: currentCards })
+                    console.log(this.state.currentCards)
+                }
+
+                )
         }
 
     }, 400, false)
@@ -143,26 +170,26 @@ export default class Search extends Component {
                     maxLength="30"
                     placeholder="Search for..."
                     className="search"
-                    
+
                 />
                 <div className="filters">
                     <label>
                         <input
-                        className="invisible"
+                            className="invisible"
                             type="checkbox"
                             value="bass"
                             onChange={(e) => this.setState({
                                 bass: e.target.checked
                             })}
                         />
-                        <span 
-                        onClick={this.toggleClass}
-                        className={this.state.active ? "active": "notActive"} 
+                        <span
+                            onClick={this.toggleClass}
+                            className={this.state.active ? "active" : "notActive"}
                         >Bass</span>
                     </label>
                     <label>
                         <input
-                        className="invisible"
+                            className="invisible"
                             type="checkbox"
                             value="player"
                             onChange={(e) => this.setState({
@@ -172,7 +199,7 @@ export default class Search extends Component {
                     </label>
                     <label>
                         <input
-                        className="invisible"
+                            className="invisible"
                             type="checkbox"
                             value="guitar"
                             onChange={(e) => this.setState({
@@ -182,7 +209,7 @@ export default class Search extends Component {
                     </label>
                     <label>
                         <input
-                        className="invisible"
+                            className="invisible"
                             type="checkbox"
                             value="chords"
                             onChange={(e) => this.setState({
@@ -199,27 +226,27 @@ export default class Search extends Component {
                 </div>
 
                 <div>
-                    
-                    {this.state.filteredData.length !== 0 ? this.state.filteredData.map(item => {
+
+                    {this.state.currentCards.length !== 0 ? this.state.currentCards.map(item => {
                         return (
                             <div className="cardContainer" key={item.id}>
-                                <Card 
-                                id={item.id} 
-                                title={item.title} 
-                                name={item.artist.name}
-                                tabs={item.tabTypes.map((item, index) => <p key={index} className="tabs">{item.replace("TEXT_", "")}</p>
-                                )} />
-                               
+                                <Card
+                                    id={item.id}
+                                    title={item.title}
+                                    name={item.artist.name}
+                                    tabs={item.tabTypes.map((item, index) => <p key={index} className="tabs">{item.replace("TEXT_", "")}</p>
+                                    )} />
+
                             </div>
                         )
                     }
                     ) : <div></div>
                     }
-                    {this.state.data !== [] && this.state.filteredData.length !==0 ? <div>Sorry, we couldn't find anything like that... :(</div> : null}
+                    {this.state.data.length !== 0 && this.state.currentCards.length === 0 ? <div>There's no results for your search</div> : null}
                 </div>
+                <Pagination postsPerPage={this.state.postsPerPage} totalPosts={this.state.filteredData.length} paginate={this.paginate}/>
 
             </div>
         )
     }
 }
- 

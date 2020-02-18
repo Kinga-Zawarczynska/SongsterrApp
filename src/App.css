@@ -122,3 +122,20 @@ align-items: center;
   margin: 2%;
   text-align: center;
 }
+
+.regularButton{
+border: 1px solid black;
+}
+
+.pagination{
+  display: flex;
+  justify-content: center;
+}
+
+.pageItem{
+  margin: 1%;
+}
+
+.regularButton{
+  background-color: transparent;
+}
