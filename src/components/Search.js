@@ -202,7 +202,7 @@ export default class Search extends Component {
                     
                     {this.state.filteredData.length !== 0 ? this.state.filteredData.map(item => {
                         return (
-                            <div className={this.state.filter} key={item.id}>
+                            <div className="cardContainer" key={item.id}>
                                 <Card 
                                 id={item.id} 
                                 title={item.title} 
