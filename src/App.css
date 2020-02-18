@@ -1,42 +1,108 @@
+body{
+  background: rgba(219, 83, 83, 0.6);
+}
+
+@font-face{
+  font-family: 'Detale';
+  src: url(./Datalegreya-Gradient.otf);
+
+}
+
 .App {
   text-align: center;
+  height: 100%;
 }
 
-.App-logo {
-  height: 20vmin;
-  pointer-events: none;
+.App p{
+  font-family: 'Detale';
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.invisible {
+  display: none;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 10vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+span{
+  margin: 1% 2% 4%;
 }
 
-.App-link {
-  color: #61dafb;
+span:hover{
+  color: rgb(158, 52, 52);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.active{
+  color: rgb(250, 242, 242);
+}
+
+.notActive{
+  color: black;
+}
+
+.search{
+  border: 1px solid white;
+  border-radius: 3pc;
+  text-align: center;
+  padding: 3px;
+  margin: 1% 0 0;
+  outline: transparent;
+  font-family: 'Detale';
+  font-weight: bold;
+}
+
+.filters{
+  margin: 3%;
+  font-family: 'Detale';
+  font-weight: bold;
+}
+
+.filterButton button{
+  margin: 0 auto;
+  border-radius: 18px;
+    background: pink;
+    border: none;
+    padding: 1% 3%;
+    width: 10%;
+    text-align: center;
+    font-family: 'Detale';
+    font-weight: bold;
+}
+
+.logo {
+  height: 300px;
+  width: auto;
 }
 
 .display{
   margin: 20px;
+}
+
+.main { 
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  border-radius: 10px;
+  height: 10%;
+  width: 35%;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.main div {
+  margin: 2%;
+  text-align: center;
+  justify-content: center;
+}
+
+.card{
+  margin-top: 5%;
+}
+
+.Tabs {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 auto;
+}
+
+.tabs{
+  margin: 2%;
+  text-align: center;
 }
